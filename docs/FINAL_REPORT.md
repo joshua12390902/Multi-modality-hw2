@@ -217,6 +217,8 @@ Q_final = clip(floor((Q_base × scale × bit_scale + 50) / 100), 1, 65535)
 | **60** | 34,027 | 1.038 | 15.41:1 | 165.8 | **50.96** |
 | **90** | 36,222 | 1.105 | 14.48:1 | 74.6 | **61.22** |
 
+**Rate-Distortion 圖**: results_real/rate_distortion_curve.png（三個品質點的壓縮率-PSNR 曲線）
+
 ### 4.3 切片級詳細結果
 
 #### I50 切片 (額部區域)
@@ -316,6 +318,38 @@ $$\text{bpp} = \frac{\text{Compressed Size} \times 8}{\text{Number of Pixels}}$$
 - 系統運作穩定
 - Quality 60 表現最一致
 - 不同解剖位置的影像有不同特性，但編碼器適應良好
+
+### 4.6 定性結果 (重建影像 + 誤差圖)
+
+- 取 **I150** 切片、Quality=60，生成原始影像、重建影像，以及絕對誤差圖（以 99.5 分位做強度縮放）。
+- 檔案位置: results_real/qualitative_I150_Q60.png
+- 觀察：重建影像與原始影像視覺差異極小；誤差集中於高頻邊緣處，無明顯臨床結構遺失。
+
+### 4.7 消融實驗 (熵編碼效果)
+
+為量化 Huffman 熵編碼的貢獻，假設僅儲存量化係數為 16-bit 整數（不做熵編碼），其檔案大小約為 512×512×2 = **524,288 bytes**。與本系統（Quality 60）比較：
+
+| 設定 | 檔案大小 | 壓縮率 | PSNR |
+|------|---------|-------|------|
+| 無熵編碼 (理論) | ~524,288 | 1.0:1 | 50.96 dB |
+| Huffman (本系統) | 34,027 | 15.41:1 | 50.96 dB |
+
+**結論**: 熵編碼提供約 15× 額外壓縮，且不影響失真（PSNR 相同），顯著降低存儲與傳輸成本。
+
+### 4.8 SSIM 與邊緣保留 (Task-based)
+
+- **SSIM**（全域結構相似度）與 **Edge PSNR**（Sobel 邊緣映射的 PSNR）加入評估。
+- 邊緣映射採用 Sobel 梯度 magnitude，衡量重建影像對結構邊界的保留度。
+
+| Quality | SSIM | Edge PSNR (dB) |
+|---------|------|----------------|
+| 30 | 0.9810 | 21.00 |
+| 60 | 0.9857 | 24.64 |
+| 90 | 0.9986 | 31.26 |
+
+**觀察**:
+- Quality 60 SSIM=0.986，已屬高結構相似度；Quality 90 幾乎無可見差異 (SSIM≈1)。
+- 邊緣 PSNR 隨品質提升而上升，顯示關鍵邊緣/解剖結構在高品質設定下保留度更佳。
 
 ---
 
@@ -450,6 +484,9 @@ python3 tools/evaluate_real_data.py
 - 位元深度: 16-bit 有符號整數
 - 切片數: 302 層
 - 轉移語法: JPEG Lossless (Process 14)
+- 來源網址: https://medimodel.com/sample-dicom-files/
+- 使用子集: Human_Skull_2，僅採樣 I50/I100/I150/I200/I250 五張切片做評估
+- 使用限制: 官網標示為教育與研究用途，本報告僅作課程作業分析，不再散布資料
 
 **替代資料集**（參考）:
 - TCIA (The Cancer Imaging Archive)
@@ -514,6 +551,7 @@ scipy>=1.7.0         # DCT 轉換
 pydicom>=2.0.0       # DICOM 讀取
 SimpleITK>=2.0.0     # JPEG Lossless 解碼
 matplotlib>=3.3.0    # 視覺化
+scikit-image>=0.19.0 # SSIM 與邊緣分析（加分項）
 ```
 
 ### C. 參數參考表

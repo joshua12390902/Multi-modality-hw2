@@ -11,6 +11,8 @@ import numpy as np
 import SimpleITK as sitk
 import matplotlib.pyplot as plt
 from pathlib import Path
+from skimage.metrics import structural_similarity as ssim
+from scipy.ndimage import sobel
 
 # Add src to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
@@ -53,31 +55,26 @@ def encode_image_direct(image, quality=50):
     height, width = image.shape
     block_size = 8
     bit_depth = 16
-    
+
     # Pad image
     pad_h = (block_size - height % block_size) % block_size
     pad_w = (block_size - width % block_size) % block_size
     padded = np.pad(image, ((0, pad_h), (0, pad_w)), mode='edge')
-    
+
     # Create quantization matrix
     quant_matrix = create_quantization_matrix(quality, block_size, bit_depth)
-    
-    # Process blocks
+
+    # Process blocks: DCT -> quantize -> zigzag
     all_coeffs = []
     for i in range(0, padded.shape[0], block_size):
         for j in range(0, padded.shape[1], block_size):
             block = padded[i:i+block_size, j:j+block_size]
-            
-            # DCT
+
             dct_block = dct2d(block)
-            
-            # Quantize
             quant_block = quantize(dct_block, quant_matrix)
-            
-            # Zigzag
             coeffs = zigzag_flatten(quant_block)
             all_coeffs.extend(coeffs)
-    
+
     # Huffman encode
     from collections import Counter
     symbols_freq = Counter(all_coeffs)
@@ -85,22 +82,22 @@ def encode_image_direct(image, quality=50):
     huffman_codes = generate_huffman_codes(huffman_tree)
     encoded_bits = encode_huffman(all_coeffs, huffman_codes)
     num_bits = len(encoded_bits)
-    
+
     # Serialize Huffman table
     huffman_table = serialize_huffman_table(huffman_codes)
-    
+
     # Convert bitstring to bytes
     encoded_bytes = bytearray()
     for i in range(0, len(encoded_bits), 8):
         byte_str = encoded_bits[i:i+8].ljust(8, '0')
         encoded_bytes.append(int(byte_str, 2))
-    
+
     # Pack bitstream
     bitstream = pack_bitstream(
         width, height, bit_depth, block_size, quality,
         quant_matrix, huffman_table, bytes(encoded_bytes), num_bits
     )
-    
+
     return bitstream
 
 def decode_image_direct(bitstream):
@@ -178,11 +175,27 @@ def decode_image_direct(bitstream):
     return reconstructed
 
 def calculate_metrics(original, reconstructed):
-    """Calculate RMSE and PSNR"""
+    """Calculate RMSE, PSNR, SSIM, and edge-preservation RMSE/PSNR"""
     rmse = np.sqrt(np.mean((original - reconstructed) ** 2))
     max_val = 65535.0  # 16-bit
     psnr = 20 * np.log10(max_val / rmse) if rmse > 0 else 100.0
-    return rmse, psnr
+
+    # SSIM expects data range and float64
+    ssim_val = ssim(original, reconstructed, data_range=max_val)
+
+    # Edge preservation: Sobel magnitude
+    def sobel_mag(x):
+        gx = sobel(x, axis=0)
+        gy = sobel(x, axis=1)
+        return np.hypot(gx, gy)
+
+    orig_edge = sobel_mag(original)
+    recon_edge = sobel_mag(reconstructed)
+    edge_rmse = np.sqrt(np.mean((orig_edge - recon_edge) ** 2))
+    edge_max = np.max(orig_edge) if np.max(orig_edge) > 0 else 1.0
+    edge_psnr = 20 * np.log10(edge_max / edge_rmse) if edge_rmse > 0 else 100.0
+
+    return rmse, psnr, ssim_val, edge_rmse, edge_psnr
 
 def evaluate_real_medimodel():
     """
@@ -241,19 +254,22 @@ def evaluate_real_medimodel():
             reconstructed = decode_image_direct(bitstream)
             
             # Calculate metrics
-            rmse, psnr = calculate_metrics(image, reconstructed)
+            rmse, psnr, ssim_val, edge_rmse, edge_psnr = calculate_metrics(image, reconstructed)
             
             # Calculate compression metrics
             original_size = image.size * 2  # 16-bit = 2 bytes per pixel
             bpp = (compressed_size * 8) / image.size
             ratio = original_size / compressed_size
             
-            slice_result['qualities'][quality] = {
+            slice_result['qualities'][str(quality)] = {
                 'compressed_bytes': int(compressed_size),
                 'bits_per_pixel': float(bpp),
                 'compression_ratio': float(ratio),
                 'rmse': float(rmse),
-                'psnr_db': float(psnr)
+                'psnr_db': float(psnr),
+                'ssim': float(ssim_val),
+                'edge_rmse': float(edge_rmse),
+                'edge_psnr_db': float(edge_psnr)
             }
             
             print(f"    Q={quality}: {compressed_size:,} bytes, {bpp:.3f} bpp, {ratio:.2f}:1, PSNR={psnr:.2f} dB")
@@ -273,16 +289,18 @@ def evaluate_real_medimodel():
     print("\n" + "="*80)
     print("SUMMARY: Average Performance Across All Slices")
     print("="*80)
-    
+
     for quality in quality_levels:
-        metrics = [r['qualities'][quality] for r in results['results']]
+        metrics = [r['qualities'][str(quality)] for r in results['results']]
         avg_bpp = np.mean([m['bits_per_pixel'] for m in metrics])
         avg_ratio = np.mean([m['compression_ratio'] for m in metrics])
         avg_psnr = np.mean([m['psnr_db'] for m in metrics])
+        avg_ssim = np.mean([m['ssim'] for m in metrics])
+        avg_edge_psnr = np.mean([m['edge_psnr_db'] for m in metrics])
         avg_size = np.mean([m['compressed_bytes'] for m in metrics])
-        
+
         print(f"Quality {quality:2d}: {avg_size:>8.0f} bytes | {avg_bpp:>5.3f} bpp | "
-              f"{avg_ratio:>5.2f}:1 | PSNR {avg_psnr:>5.2f} dB")
+              f"{avg_ratio:>5.2f}:1 | PSNR {avg_psnr:>5.2f} dB | SSIM {avg_ssim:>5.4f} | Edge PSNR {avg_edge_psnr:>5.2f} dB")
     
     return results
 

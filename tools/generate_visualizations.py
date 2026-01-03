@@ -8,8 +8,12 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-# 設定中文字體
-plt.rcParams['font.sans-serif'] = ['SimHei', 'DejaVu Sans']
+# 設定中文字體（優先使用 Noto CJK，缺字時再回退）
+plt.rcParams['font.family'] = 'sans-serif'
+plt.rcParams['font.sans-serif'] = [
+    'Noto Sans CJK TC', 'Noto Sans CJK SC', 'Noto Sans CJK JP',
+    'Noto Sans', 'DejaVu Sans'
+]
 plt.rcParams['axes.unicode_minus'] = False
 
 # 讀取結果
@@ -47,42 +51,42 @@ psnr_list = [psnr_values[q] for q in qualities]
 colors = ['#FF6B6B', '#4ECDC4', '#45B7D1']
 bars1 = ax.bar(range(len(qualities)), psnr_list, color=colors, alpha=0.8, edgecolor='black', linewidth=2)
 ax.set_xticks(range(len(qualities)))
-ax.set_xticklabels([f'Q={q}' for q in qualities], fontsize=11, fontweight='bold')
-ax.set_ylabel('PSNR (dB)', fontsize=11, fontweight='bold')
-ax.set_title('品質 vs PSNR\n(越高越好)', fontsize=12, fontweight='bold')
+ax.set_xticklabels([f'Q={q}' for q in qualities], fontsize=14, fontweight='bold')
+ax.set_ylabel('PSNR (dB)', fontsize=14, fontweight='bold')
+ax.set_title('品質 vs PSNR\n(越高越好)', fontsize=15, fontweight='bold')
 ax.grid(axis='y', alpha=0.3, linestyle='--')
 for i, (bar, val) in enumerate(zip(bars1, psnr_list)):
     height = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2., height,
-            f'{val:.2f} dB', ha='center', va='bottom', fontsize=10, fontweight='bold')
+            f'{val:.2f} dB', ha='center', va='bottom', fontsize=12, fontweight='bold')
 
 # 2. Compression Ratio vs Quality
 ax = axes[1]
 comp_list = [compression_values[q] for q in qualities]
 bars2 = ax.bar(range(len(qualities)), comp_list, color=colors, alpha=0.8, edgecolor='black', linewidth=2)
 ax.set_xticks(range(len(qualities)))
-ax.set_xticklabels([f'Q={q}' for q in qualities], fontsize=11, fontweight='bold')
-ax.set_ylabel('壓縮率 (:1)', fontsize=11, fontweight='bold')
-ax.set_title('品質 vs 壓縮率\n(越高越好)', fontsize=12, fontweight='bold')
+ax.set_xticklabels([f'Q={q}' for q in qualities], fontsize=14, fontweight='bold')
+ax.set_ylabel('壓縮率 (:1)', fontsize=14, fontweight='bold')
+ax.set_title('品質 vs 壓縮率\n(越高越好)', fontsize=15, fontweight='bold')
 ax.grid(axis='y', alpha=0.3, linestyle='--')
 for i, (bar, val) in enumerate(zip(bars2, comp_list)):
     height = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2., height,
-            f'{val:.2f}:1', ha='center', va='bottom', fontsize=10, fontweight='bold')
+            f'{val:.2f}:1', ha='center', va='bottom', fontsize=12, fontweight='bold')
 
 # 3. Bits per Pixel vs Quality
 ax = axes[2]
 bpp_list = [bpp_values[q] for q in qualities]
 bars3 = ax.bar(range(len(qualities)), bpp_list, color=colors, alpha=0.8, edgecolor='black', linewidth=2)
 ax.set_xticks(range(len(qualities)))
-ax.set_xticklabels([f'Q={q}' for q in qualities], fontsize=11, fontweight='bold')
-ax.set_ylabel('比特率 (bpp)', fontsize=11, fontweight='bold')
-ax.set_title('品質 vs 比特率\n(越低越好)', fontsize=12, fontweight='bold')
+ax.set_xticklabels([f'Q={q}' for q in qualities], fontsize=14, fontweight='bold')
+ax.set_ylabel('比特率 (bpp)', fontsize=14, fontweight='bold')
+ax.set_title('品質 vs 比特率\n(越低越好)', fontsize=15, fontweight='bold')
 ax.grid(axis='y', alpha=0.3, linestyle='--')
 for i, (bar, val) in enumerate(zip(bars3, bpp_list)):
     height = bar.get_height()
     ax.text(bar.get_x() + bar.get_width()/2., height,
-            f'{val:.3f}', ha='center', va='bottom', fontsize=10, fontweight='bold')
+            f'{val:.3f}', ha='center', va='bottom', fontsize=12, fontweight='bold')
 
 plt.tight_layout()
 plt.savefig('/workspace/MMIP_hw2/results_real/performance_comparison.png', dpi=300, bbox_inches='tight')
@@ -102,12 +106,12 @@ ax.plot(compression_list, psnr_list, 'o-', linewidth=3, markersize=12,
 for comp, psnr, q in zip(compression_list, psnr_list, qualities):
     ax.annotate(f'Q={q}\n{psnr:.2f}dB\n{comp:.2f}:1', 
                 xy=(comp, psnr), xytext=(0, 15), textcoords='offset points',
-                ha='center', fontsize=10, fontweight='bold',
+                ha='center', fontsize=12, fontweight='bold',
                 bbox=dict(boxstyle='round,pad=0.5', facecolor='yellow', alpha=0.3))
 
-ax.set_xlabel('壓縮率 (Original / Compressed) (:1)', fontsize=12, fontweight='bold')
-ax.set_ylabel('PSNR (dB)', fontsize=12, fontweight='bold')
-ax.set_title('Rate-Distortion 曲線\n(Medimodel Human_Skull_2 CT)', fontsize=14, fontweight='bold')
+ax.set_xlabel('壓縮率 (Original / Compressed) (:1)', fontsize=14, fontweight='bold')
+ax.set_ylabel('PSNR (dB)', fontsize=14, fontweight='bold')
+ax.set_title('Rate-Distortion 曲線\n(Medimodel Human_Skull_2 CT)', fontsize=16, fontweight='bold')
 ax.grid(True, alpha=0.3, linestyle='--')
 ax.set_xlim(14, 16)
 ax.set_ylim(48, 62)
@@ -133,23 +137,23 @@ for idx, (result, ax) in enumerate(zip(data['results'], axes[:5])):
                   alpha=0.8, edgecolor='black', linewidth=2)
     
     ax.set_xticks(range(len(qualities_list)))
-    ax.set_xticklabels([f'Q={q}' for q in qualities_list], fontweight='bold')
-    ax.set_ylabel('PSNR (dB)', fontweight='bold')
+    ax.set_xticklabels([f'Q={q}' for q in qualities_list], fontweight='bold', fontsize=11)
+    ax.set_ylabel('PSNR (dB)', fontweight='bold', fontsize=11)
     ax.set_title(f'{slice_name} - 值範圍 {result["value_range"][0]:.0f}~{result["value_range"][1]:.0f}', 
-                 fontweight='bold')
+                 fontweight='bold', fontsize=12)
     ax.set_ylim(40, 70)
     ax.grid(axis='y', alpha=0.3, linestyle='--')
     
     for bar, val in zip(bars, psnr_list):
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., height,
-                f'{val:.1f}', ha='center', va='bottom', fontsize=9, fontweight='bold')
+                f'{val:.1f}', ha='center', va='bottom', fontsize=11, fontweight='bold')
 
 # 移除多餘的子圖
 axes[5].remove()
 
 plt.suptitle('各切片 PSNR 性能 (Medimodel Human_Skull_2 CT)', 
-             fontsize=14, fontweight='bold', y=1.00)
+             fontsize=16, fontweight='bold', y=1.00)
 plt.tight_layout()
 plt.savefig('/workspace/MMIP_hw2/results_real/slice_details.png', dpi=300, bbox_inches='tight')
 print("✓ 已儲存: slice_details.png")
