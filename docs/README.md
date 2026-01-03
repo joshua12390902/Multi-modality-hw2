@@ -7,7 +7,6 @@ A lossy compression system for 16-bit medical images (CT/MR) implementing block 
 ### Installation
 
 ```bash
-cd /workspace/MMIP_hw2
 pip install -r requirements.txt
 ```
 
