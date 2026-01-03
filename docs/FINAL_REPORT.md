@@ -114,16 +114,18 @@ $$F(u,v) = \frac{2}{N} C(u) C(v) \sum_{x=0}^{7} \sum_{y=0}^{7} f(x,y) \cos\left[
 
 **基礎矩陣**（參考 JPEG 標準）:
 
-$$Q_{base} = \begin{pmatrix}
-16 & 11 & 10 & 16 & 24 & 40 & 51 & 61 \\
-12 & 12 & 14 & 19 & 26 & 58 & 60 & 55 \\
-14 & 13 & 16 & 24 & 40 & 57 & 69 & 56 \\
-14 & 17 & 22 & 29 & 51 & 87 & 80 & 62 \\
-18 & 22 & 37 & 56 & 68 & 109 & 103 & 77 \\
-24 & 35 & 55 & 64 & 81 & 104 & 113 & 92 \\
-49 & 64 & 78 & 87 & 103 & 121 & 120 & 101 \\
-72 & 92 & 95 & 98 & 112 & 100 & 103 & 99
-\end{pmatrix}$$
+基礎量化矩陣 Q_base (8×8):
+
+| | Col 0 | Col 1 | Col 2 | Col 3 | Col 4 | Col 5 | Col 6 | Col 7 |
+|------|-------|-------|-------|-------|-------|-------|-------|-------|
+| Row 0 | 16 | 11 | 10 | 16 | 24 | 40 | 51 | 61 |
+| Row 1 | 12 | 12 | 14 | 19 | 26 | 58 | 60 | 55 |
+| Row 2 | 14 | 13 | 16 | 24 | 40 | 57 | 69 | 56 |
+| Row 3 | 14 | 17 | 22 | 29 | 51 | 87 | 80 | 62 |
+| Row 4 | 18 | 22 | 37 | 56 | 68 | 109 | 103 | 77 |
+| Row 5 | 24 | 35 | 55 | 64 | 81 | 104 | 113 | 92 |
+| Row 6 | 49 | 64 | 78 | 87 | 103 | 121 | 120 | 101 |
+| Row 7 | 72 | 92 | 95 | 98 | 112 | 100 | 103 | 99 |
 
 **品質調整公式**:
 
@@ -178,12 +180,12 @@ Q_final = clip(floor((Q_base × scale × bit_scale + 50) / 100), 1, 65535)
 位元 96-111: 量化矩陣大小 (uint16)
 位元 112+:   量化矩陣 (64 × uint16 entries)
 
-位元 ?-?+15: Huffman 碼表大小 (uint16)
-位元 ?+16+:  Huffman 碼表 (序列化)
+位元 N-N+15: Huffman 碼表大小 (uint16)
+位元 N+16+:  Huffman 碼表 (序列化)
 
-位元 ??-??+31: 編碼位元數 (uint32)
-位元 ??+32+63: 編碼資料大小 (uint32)
-位元 ??+64+:   編碼係數資料 (variable length)
+位元 M-M+31: 編碼位元數 (uint32)
+位元 M+32+63: 編碼資料大小 (uint32)
+位元 M+64+:   編碼係數資料 (variable length)
 ```
 
 **優點**:
@@ -270,7 +272,7 @@ Q_final = clip(floor((Q_base × scale × bit_scale + 50) / 100), 1, 65535)
 
 #### 壓縮率趨勢
 
-$$\text{Compression Ratio} = \frac{\text{Original Size}}{\text{Compressed Size}}$$
+Compression Ratio = Original Size / Compressed Size
 
 - **Quality 30**: 15.63:1 - 高度壓縮，適合存儲和傳輸
 - **Quality 60**: 15.41:1 - 平衡選項
@@ -282,7 +284,7 @@ $$\text{Compression Ratio} = \frac{\text{Original Size}}{\text{Compressed Size}}
 
 PSNR 計算公式：
 
-$$\text{PSNR} = 20 \log_{10}\left(\frac{MAX_I}{\sqrt{MSE}}\right) = 20 \log_{10}\left(\frac{2^{16}-1}{\text{RMSE}}\right)$$
+PSNR = 20 × log₁₀(MAX_I / √MSE) = 20 × log₁₀((2^16 - 1) / RMSE)
 
 **醫學影像品質等級參考**:
 - PSNR > 50 dB: 高品質，無視覺差異
@@ -296,7 +298,7 @@ $$\text{PSNR} = 20 \log_{10}\left(\frac{MAX_I}{\sqrt{MSE}}\right) = 20 \log_{10}
 
 #### 比特率 (bits per pixel)
 
-$$\text{bpp} = \frac{\text{Compressed Size} \times 8}{\text{Number of Pixels}}$$
+bpp = (Compressed Size × 8) / Number of Pixels
 
 - Quality 30: 1.024 bpp (原始 16 bpp 的 6.4%)
 - Quality 60: 1.038 bpp (原始 16 bpp 的 6.5%)

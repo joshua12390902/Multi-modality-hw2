@@ -1,0 +1,48 @@
+{
+  "dataset": "Medimodel Human_Skull_2 CT",
+  "source": "512×512, 16-bit, JPEG Lossless DICOM",
+  "slices_evaluated": [
+    "I50.dcm",
+    "I100.dcm",
+    "I150.dcm",
+    "I200.dcm",
+    "I250.dcm"
+  ],
+  "quality_levels": [
+    30,
+    60,
+    90
+  ],
+  "average_metrics": {
+    "30": {
+      "compressed_bytes": 33540.0,
+      "bits_per_pixel": 1.0235595703125,
+      "compression_ratio": 15.632106332530352,
+      "rmse": 232.62423706054688,
+      "psnr_db": 49.14287643432617,
+      "ssim": 0.9810126668084292,
+      "edge_rmse": 805.5173095703125,
+      "edge_psnr_db": 21.00221519470215
+    },
+    "60": {
+      "compressed_bytes": 34027.0,
+      "bits_per_pixel": 1.038421630859375,
+      "compression_ratio": 15.409617784155737,
+      "rmse": 185.7451629638672,
+      "psnr_db": 50.96110153198242,
+      "ssim": 0.9857436742765868,
+      "edge_rmse": 535.7023803710938,
+      "edge_psnr_db": 24.636034774780274
+    },
+    "90": {
+      "compressed_bytes": 36221.8,
+      "bits_per_pixel": 1.105401611328125,
+      "compression_ratio": 14.484784126584646,
+      "rmse": 60.13552474975586,
+      "psnr_db": 61.21613388061523,
+      "ssim": 0.9986099111640694,
+      "edge_rmse": 256.85529174804685,
+      "edge_psnr_db": 31.256522369384765
+    }
+  }
+}
