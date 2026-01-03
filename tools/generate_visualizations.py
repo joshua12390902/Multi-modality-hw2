@@ -8,6 +8,9 @@ import numpy as np
 import matplotlib.pyplot as plt
 from pathlib import Path
 
+# 從評估腳本重用 DICOM 讀取與編解碼流程
+from evaluate_real_data import read_dicom_sitk, encode_image_direct, decode_image_direct
+
 # 設定中文字體（優先使用 Noto CJK，缺字時再回退）
 plt.rcParams['font.family'] = 'sans-serif'
 plt.rcParams['font.sans-serif'] = [
@@ -158,7 +161,61 @@ plt.tight_layout()
 plt.savefig('/workspace/MMIP_hw2/results_real/slice_details.png', dpi=300, bbox_inches='tight')
 print("✓ 已儲存: slice_details.png")
 
+# 生成定性重建與誤差圖
+def generate_qualitative_example():
+    dicom_dir = Path('/workspace/MMIP_hw2/2_skull_ct/DICOM_dcm')
+    slice_name = 'I150.dcm'
+    quality = 60
+    output_path = Path('/workspace/MMIP_hw2/results_real/qualitative_I150_Q60.png')
+
+    slice_path = dicom_dir / slice_name
+    if not slice_path.exists():
+        print(f"⚠ 找不到 DICOM: {slice_path}")
+        return
+
+    image = read_dicom_sitk(slice_path)
+    if image is None:
+        print("⚠ 無法讀取 DICOM")
+        return
+
+    bitstream = encode_image_direct(image, quality)
+    recon = decode_image_direct(bitstream)
+
+    # 視覺化時做簡單視窗化，避免灰階範圍過寬
+    def window(img):
+        vmin, vmax = np.percentile(img, [0.5, 99.5])
+        return np.clip((img - vmin) / (vmax - vmin + 1e-6), 0, 1)
+
+    orig_vis = window(image)
+    recon_vis = window(recon)
+
+    abs_err = np.abs(image - recon)
+    err_max = max(np.quantile(abs_err, 0.995), 1e-6)
+
+    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+
+    im0 = axes[0].imshow(orig_vis, cmap='gray')
+    axes[0].set_title('原始影像 (I150)', fontsize=14, fontweight='bold')
+    axes[0].axis('off')
+
+    im1 = axes[1].imshow(recon_vis, cmap='gray')
+    axes[1].set_title('重建影像 (Q=60)', fontsize=14, fontweight='bold')
+    axes[1].axis('off')
+
+    im2 = axes[2].imshow(abs_err, cmap='magma', vmax=err_max)
+    axes[2].set_title('誤差圖 (|原始-重建|)', fontsize=14, fontweight='bold')
+    axes[2].axis('off')
+    cbar = fig.colorbar(im2, ax=axes[2], fraction=0.046, pad=0.04)
+    cbar.ax.set_ylabel('絕對差', fontsize=12, fontweight='bold')
+
+    plt.tight_layout()
+    plt.savefig(output_path, dpi=300, bbox_inches='tight')
+    print(f"✓ 已儲存: {output_path.name}")
+
+generate_qualitative_example()
+
 print("\n圖表已全部生成！")
 print("  - performance_comparison.png")
 print("  - rate_distortion_curve.png")
 print("  - slice_details.png")
+print("  - qualitative_I150_Q60.png")
