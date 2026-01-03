@@ -118,6 +118,14 @@
         font-weight: 600;
         color: #2c3e50;
     }
+    
+    img {
+        max-width: 85%;
+        height: auto;
+        margin: 8pt auto;
+        display: block;
+        page-break-inside: avoid;
+    }
     </style>
 </head>
 <body>
@@ -127,7 +135,6 @@
 <strong>學號</strong>: 314831024<br />
 <strong>姓名</strong>: 李朋逸<br />
 <strong>日期</strong>: 2026年1月3日<br />
-<strong>GitHub</strong>: https://github.com/joshua12390902/Multi-modality-hw2<br />
 <strong>GitHub</strong>: https://github.com/joshua12390902/Multi-modality-hw2</p>
 
 <hr />
@@ -415,224 +422,25 @@
 <li>原始大小：524,288 bytes → 壓縮後：~34KB</li>
 </ul>
 
-<p><strong>效能比較圖</strong>：</p>
+<p><img src="file:///workspace/MMIP_hw2/results_real/performance_comparison.png" alt="效能比較圖" />
+<em>圖1：三種品質等級（Q30/Q60/Q90）的PSNR、壓縮率、比特率比較。Q60提供最佳平衡點</em></p>
 
-<p><img src="../results_real/performance_comparison.png" alt="效能比較" /></p>
-
-<p>圖1：三種品質等級（Q30/Q60/Q90）的PSNR、壓縮率、比特率比較。Q60提供最佳平衡點。</p>
-
-<p><img src="../results_real/performance_comparison.png" alt="性能比較圖" />
-<em>圖1：三種品質設定下的PSNR、壓縮率與比特率比較</em></p>
-
-<p><img src="../results_real/rate_distortion_curve.png" alt="Rate-Distortion曲線" />
-<em>圖2：Rate-Distortion曲線 - 壓縮率與PSNR的權衡關係</em></p>
+<p><img src="file:///workspace/MMIP_hw2/results_real/rate_distortion_curve.png" alt="Rate-Distortion曲線" />
+<em>圖2：壓縮率與PSNR的權衡關係</em></p>
 
 <h3 id="43-切片級結果">4.3 切片級結果</h3>
 
-<p><strong>I50切片（額部區域）</strong>範圍[-3024, 2269]：</p>
+<p>五張切片的詳細評估結果：</p>
 
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>壓縮(bytes)</th>
-  <th>bpp</th>
-  <th>比率</th>
-  <th>PSNR</th>
-  <th>SSIM</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>33,786</td>
-  <td>1.031</td>
-  <td>15.52:1</td>
-  <td>46.66 dB</td>
-  <td>0.9742</td>
-</tr>
-<tr>
-  <td>60</td>
-  <td>34,669</td>
-  <td>1.058</td>
-  <td>15.12:1</td>
-  <td>50.38 dB</td>
-  <td>0.9866</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>38,109</td>
-  <td>1.163</td>
-  <td>13.76:1</td>
-  <td>57.27 dB</td>
-  <td>0.9977</td>
-</tr>
-</tbody>
-</table>
+<p><strong>I50（額部）</strong> [-3024, 2269]：Q30: 15.52:1, 46.66dB | Q60: 15.12:1, 50.38dB | Q90: 13.76:1, 57.27dB</p>
 
-<p><strong>I100切片（上顎區域）</strong>範圍[-3024, 381]：</p>
+<p><strong>I100（上顎）</strong> [-3024, 381]：Q30: 15.56:1, 47.96dB | Q60: 15.36:1, 50.54dB | Q90: 14.49:1, 58.51dB</p>
 
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>壓縮(bytes)</th>
-  <th>bpp</th>
-  <th>比率</th>
-  <th>PSNR</th>
-  <th>SSIM</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>33,692</td>
-  <td>1.028</td>
-  <td>15.56:1</td>
-  <td>47.96 dB</td>
-  <td>0.9846</td>
-</tr>
-<tr>
-  <td>60</td>
-  <td>34,129</td>
-  <td>1.042</td>
-  <td>15.36:1</td>
-  <td>50.54 dB</td>
-  <td>0.9866</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>36,178</td>
-  <td>1.104</td>
-  <td>14.49:1</td>
-  <td>58.51 dB</td>
-  <td>0.9987</td>
-</tr>
-</tbody>
-</table>
+<p><strong>I150（眼窩）</strong> [-1024, 1879]：Q30: 15.70:1, 50.42dB | Q60: 15.53:1, 51.32dB | Q90: 14.70:1, 62.88dB</p>
 
-<p><strong>I150切片（眼窩區域）</strong>範圍[-1024, 1879]：</p>
+<p><strong>I200（中頭部）</strong> [-1024, 1770]：Q30: 15.68:1, 50.77dB | Q60: 15.54:1, 51.19dB | Q90: 14.86:1, 64.77dB</p>
 
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>壓縮(bytes)</th>
-  <th>bpp</th>
-  <th>比率</th>
-  <th>PSNR</th>
-  <th>SSIM</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>33,393</td>
-  <td>1.019</td>
-  <td>15.70:1</td>
-  <td>50.42 dB</td>
-  <td>0.9826</td>
-</tr>
-<tr>
-  <td>60</td>
-  <td>33,754</td>
-  <td>1.030</td>
-  <td>15.53:1</td>
-  <td>51.32 dB</td>
-  <td>0.9852</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>35,668</td>
-  <td>1.089</td>
-  <td>14.70:1</td>
-  <td>62.88 dB</td>
-  <td>0.9988</td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>I200切片（中頭部區域）</strong>範圍[-1024, 1770]：</p>
-
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>壓縮(bytes)</th>
-  <th>bpp</th>
-  <th>比率</th>
-  <th>PSNR</th>
-  <th>SSIM</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>33,441</td>
-  <td>1.021</td>
-  <td>15.68:1</td>
-  <td>50.77 dB</td>
-  <td>0.9839</td>
-</tr>
-<tr>
-  <td>60</td>
-  <td>33,736</td>
-  <td>1.030</td>
-  <td>15.54:1</td>
-  <td>51.19 dB</td>
-  <td>0.9845</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>35,292</td>
-  <td>1.077</td>
-  <td>14.86:1</td>
-  <td>64.77 dB</td>
-  <td>0.9992</td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>I250切片（下頜部區域）</strong>範圍[-1024, 1920]：</p>
-
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>壓縮(bytes)</th>
-  <th>bpp</th>
-  <th>比率</th>
-  <th>PSNR</th>
-  <th>SSIM</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>33,388</td>
-  <td>1.019</td>
-  <td>15.70:1</td>
-  <td>49.91 dB</td>
-  <td>0.9799</td>
-</tr>
-<tr>
-  <td>60</td>
-  <td>33,847</td>
-  <td>1.033</td>
-  <td>15.49:1</td>
-  <td>51.37 dB</td>
-  <td>0.9857</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>35,862</td>
-  <td>1.094</td>
-  <td>14.62:1</td>
-  <td>62.65 dB</td>
-  <td>0.9987</td>
-</tr>
-</tbody>
-</table>
+<p><strong>I250（下頜）</strong> [-1024, 1920]：Q30: 15.70:1, 49.91dB | Q60: 15.49:1, 51.37dB | Q90: 14.62:1, 62.65dB</p>
 
 <p><strong>觀察</strong>：</p>
 
@@ -642,20 +450,14 @@
 <li>I50（含顱骨與空氣）PSNR稍低但仍達46+ dB</li>
 </ul>
 
-<p><strong>各切片詳細結果</strong>：</p>
-
-<p><img src="../results_real/slice_details.png" alt="切片詳細結果" /></p>
-
-<p>圖2：五張切片（I50/I100/I150/I200/I250）在三種品質設定下的PSNR表現。</p>
-
-<p><img src="../results_real/slice_details.png" alt="各切片詳細結果" />
-<em>圖3：5個切片在3種品質下的PSNR表現</em></p>
+<p><img src="file:///workspace/MMIP_hw2/results_real/slice_details.png" alt="各切片詳細結果" />
+<em>圖3：五張切片（I50/I100/I150/I200/I250）在三種品質設定下的PSNR表現</em></p>
 
 <h3 id="44-定性分析">4.4 定性分析</h3>
 
 <p>以I150切片、Quality=60為例：</p>
 
-<p><img src="../results_real/qualitative_I150_Q60.png" alt="定性重建結果" />
+<p><img src="file:///workspace/MMIP_hw2/results_real/qualitative_I150_Q60.png" alt="定性重建結果" />
 <em>圖4：I150切片定性結果 - 左：原始影像，中：重建影像，右：誤差圖</em></p>
 
 <p><strong>視覺品質評估</strong>：</p>
@@ -685,74 +487,13 @@
 <li>不建議用於精確測量（使用無損格式）</li>
 </ul>
 
-<p><strong>定性重建結果</strong>：</p>
-
-<p><img src="../results_real/qualitative_I150_Q60.png" alt="定性結果" /></p>
-
-<p>圖3：I150切片、Quality=60的定性結果。左：原始影像；中：重建影像；右：誤差圖（絕對差）。重建影像與原始影像視覺差異極小，誤差主要分佈於高頻邊緣區域。</p>
-
 <h3 id="45-穩定性分析">4.5 穩定性分析</h3>
 
-<p><strong>跨切片一致性</strong>（5張切片）：</p>
+<p>跨切片一致性（5張切片）：Q30標準差1.38dB | Q60標準差0.44dB | Q90標準差2.47dB</p>
 
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>PSNR 標準差</th>
-  <th>壓縮率 標準差</th>
-  <th>SSIM 標準差</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>1.38 dB</td>
-  <td>0.075:1</td>
-  <td>0.0047</td>
-</tr>
-<tr>
-  <td>60</td>
-  <td>0.44 dB</td>
-  <td>0.025:1</td>
-  <td>0.0021</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>2.47 dB</td>
-  <td>0.085:1</td>
-  <td>0.0015</td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>觀察</strong>：</p>
-
-<ul>
-<li>Quality 60 表現最穩定（最小標準差）</li>
-<li>不同解剖位置（額部、上顎、眼窩等）性能一致</li>
-<li>SSIM標準差 &lt; 0.005，結構保留度極為穩定</li>
-<li>系統對影像內容變化具有良好魯棒性</li>
-</ul>
-
-<p><strong>影像複雜度影響</strong>：</p>
-
-<ul>
-<li>I50（含大量空氣與骨骼）：PSNR較低（46 dB）但壓縮率最高</li>
-<li>I150-I250（均勻軟組織）：PSNR最高（62-64 dB）且穩定</li>
-<li>結論：複雜影像獲得更高壓縮率，但PSNR略低</li>
-</ul>
+<p>Quality 60表現最穩定，不同解剖位置性能一致，SSIM標準差&lt;0.005，系統對影像內容變化具有良好魯棒性。</p>
 
 <h3 id="46-消融實驗huffman編碼貢獻">4.6 消融實驗：Huffman編碼貢獻</h3>
-
-<p>評估Huffman熵編碼的實際效益。</p>
-
-<p><strong>實驗設定</strong>：</p>
-
-<ul>
-<li>基準：僅量化（儲存16-bit係數）</li>
-<li>實驗組：量化 + Huffman編碼</li>
-</ul>
 
 <table>
 <thead>
@@ -766,87 +507,31 @@
 </thead>
 <tbody>
 <tr>
-  <td>僅量化（理論）</td>
-  <td>~524,288 B</td>
+  <td>僅量化</td>
+  <td>~524KB</td>
   <td>1.0:1</td>
-  <td>50.96 dB</td>
+  <td>50.96dB</td>
   <td>-</td>
 </tr>
 <tr>
-  <td>Huffman（本系統）</td>
-  <td>34,027 B</td>
+  <td>+Huffman</td>
+  <td>34KB</td>
   <td>15.41:1</td>
-  <td>50.96 dB</td>
+  <td>50.96dB</td>
   <td><strong>15.4×</strong></td>
 </tr>
 </tbody>
 </table>
 
-<p><strong>分析</strong>：</p>
+<p>Huffman提供15×額外壓縮且不影響失真度。零係數佔60-70%，使熵編碼高效。編碼時間僅增5-10ms，性價比極高。</p>
 
-<ul>
-<li>Huffman提供15×額外壓縮，且不影響失真度（PSNR相同）</li>
-<li>若無Huffman，量化後檔案仍達512KB（原始大小）</li>
-<li>熵編碼是實現高壓縮率的關鍵技術</li>
-<li>編碼時間僅增加5-10 ms，性價比極高</li>
-</ul>
+<h3 id="47-rate-distortion權衡">4.7 Rate-Distortion權衡</h3>
 
-<p><strong>係數分佈特性</strong>（Q=60）：</p>
-
-<ul>
-<li>零係數佔比：約60-70%（經量化後）</li>
-<li>小係數（±1~±10）：約20%</li>
-<li>大係數（±100+）：約5%</li>
-<li>稀疏性使Huffman編碼高效</li>
-</ul>
-
-<h3 id="47-rate-distortion權衡分析">4.7 Rate-Distortion權衡分析</h3>
-
-<p><strong>最佳工作點選擇</strong>：</p>
-
-<table>
-<thead>
-<tr>
-  <th>Quality</th>
-  <th>用途場景</th>
-  <th>優勢</th>
-  <th>劣勢</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-  <td>30</td>
-  <td>遠端傳輸、低頻寬</td>
-  <td>最高壓縮率</td>
-  <td>PSNR接近臨界</td>
-</tr>
-<tr>
-  <td><strong>60</strong></td>
-  <td><strong>標準存檔</strong></td>
-  <td><strong>平衡最佳</strong></td>
-  <td>-</td>
-</tr>
-<tr>
-  <td>90</td>
-  <td>高品質診斷參考</td>
-  <td>極高PSNR</td>
-  <td>壓縮率略低</td>
-</tr>
-</tbody>
-</table>
-
-<p><strong>推薦配置</strong>：</p>
-
-<ul>
-<li>常規存檔：Quality 60（50.96 dB, 15.41:1）</li>
-<li>緊急傳輸：Quality 40（約48 dB, 16:1）</li>
-<li>精密診斷：Quality 80（約58 dB, 14.5:1）</li>
-<li>原則：PSNR &gt; 45 dB 即可滿足大多數臨床需求</li>
-</ul>
+<p>推薦配置：常規存檔Quality 60（50.96dB, 15.41:1）| 緊急傳輸Q40（~48dB, 16:1）| 精密診斷Q80（~58dB, 14.5:1）</p>
 
 <p><strong>Rate-Distortion曲線</strong>：</p>
 
-<p><img src="../results_real/rate_distortion_curve.png" alt="Rate-Distortion曲線" /></p>
+<p><img src="file:///workspace/MMIP_hw2/results_real/rate_distortion_curve.png" alt="Rate-Distortion曲線" /></p>
 
 <p>圖4：壓縮率vs PSNR的權衡曲線。三個品質點（Q30/Q60/Q90）展示了從高壓縮到高品質的連續選擇空間。</p>
 

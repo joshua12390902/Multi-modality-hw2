@@ -16,6 +16,12 @@ def generate_compact_pdf():
     with open(md_file, 'r', encoding='utf-8') as f:
         md_content = f.read()
     
+    # Fix image paths to absolute paths
+    md_content = md_content.replace(
+        '../results_real/',
+        'file:///workspace/MMIP_hw2/results_real/'
+    )
+    
     # Convert to HTML
     html_body = markdown2.markdown(
         md_content,
@@ -137,6 +143,14 @@ def generate_compact_pdf():
     strong {
         font-weight: 600;
         color: #2c3e50;
+    }
+    
+    img {
+        max-width: 85%;
+        height: auto;
+        margin: 8pt auto;
+        display: block;
+        page-break-inside: avoid;
     }
     """
     
