@@ -7,30 +7,30 @@ A lossy compression system for 16-bit medical images (CT/MR) implementing block 
 ### Installation
 
 ```bash
+cd /workspace/MMIP_hw2
 pip install -r requirements.txt
 ```
 
-### Usage
+### Usage - Codec
 
-**1. Generate test data:**
+**1. Encode an image:**
 ```bash
-python generate_test_data.py
+python src/encode.py --input <dicom_file> --output compressed.bin --quality 60
 ```
 
-**2. Encode an image:**
+**2. Decode the image:**
 ```bash
-python encode.py --input test_data/ct_512x512.dcm --output compressed.bin --quality 75
+python src/decode.py --input compressed.bin --output reconstructed.raw
 ```
 
-**3. Decode the image:**
+**3. Run full evaluation:**
 ```bash
-python decode.py --input compressed.bin --output reconstructed.raw
+python tools/evaluate_real_data.py
+python tools/generate_visualizations.py
+python tools/generate_compact_pdf.py
 ```
 
-**4. Run full evaluation:**
-```bash
-python evaluate.py --input test_data/ct_512x512.dcm --qualities 30 60 90 --output results/
-```
+Results will be saved to `results_real/` and the report to `docs/FINAL_REPORT.pdf`.
 
 ## Features
 
@@ -55,35 +55,52 @@ Bitstream → Parse → Huffman Decode → Inverse Zigzag → Dequantize → IDC
 
 ## Results Summary
 
-Example results on 512×512 16-bit CT image:
+Real evaluation on Medical Image Computing Platform (Medimodel) Human Skull CT data (5 slices, 512×512, 16-bit):
 
-| Quality | Size (bytes) | Ratio | Bits/Pixel | PSNR (dB) |
-|---------|--------------|-------|------------|-----------|
-| Q=30    | 33,409       | 15.7:1| 1.020      | 49.31     |
-| Q=60    | 33,798       | 15.5:1| 1.031      | 54.19     |
-| Q=90    | 35,401       | 14.8:1| 1.080      | 57.21     |
+| Quality | PSNR (dB) | RMSE | Compression Ratio | Bits/Pixel | SSIM  | Edge PSNR (dB) |
+|---------|-----------|------|-------------------|------------|-------|----------------|
+| Q=30    | 48.54     | 3.86 | 15.62:1          | 1.022      | 0.9685| 23.58          |
+| Q=60    | 50.96     | 2.87 | 15.41:1          | 1.031      | 0.9857| 24.64          |
+| Q=90    | 53.21     | 2.19 | 15.21:1          | 1.049      | 0.9923| 25.31          |
+
+**Key Findings:**
+- Consistent 15-16× compression ratio across all quality levels
+- Excellent structural preservation (SSIM > 0.96)
+- Strong edge preservation verified by Edge PSNR metric
+- RMSE variance < 2 dB across slices demonstrates robust codec
+
+See [FINAL_REPORT.pdf](FINAL_REPORT.pdf) for detailed evaluation methodology and visualizations.
 
 ## File Structure
 
 ```
 MMIP_hw2/
-├── encode.py                 # Encoder command-line tool
-├── decode.py                 # Decoder command-line tool
-├── evaluate.py               # Performance evaluation script
-├── dct_transform.py          # DCT/IDCT and quantization
-├── huffman_coding.py         # Huffman entropy coding
-├── bitstream.py              # Binary bitstream format
-├── utils.py                  # I/O and metrics utilities
-├── generate_test_data.py     # Synthetic data generator
-├── requirements.txt          # Python dependencies
-├── REPORT.md                 # Technical report
-├── README.md                 # This file
-├── test_data/                # Test DICOM images
-└── results/                  # Evaluation outputs
-    ├── results.csv           # Metrics table
-    ├── results.json          # Detailed results
-    ├── rate_distortion.png   # R-D plot
-    └── comparison_q*.png     # Visual comparisons
+├── src/                      # Core codec implementation
+│   ├── encode.py             # Encoder command-line tool
+│   ├── decode.py             # Decoder command-line tool
+│   ├── dct_transform.py      # DCT/IDCT and quantization matrices
+│   ├── huffman_coding.py     # Huffman entropy coding
+│   ├── bitstream.py          # Custom binary format
+│   └── utils.py              # I/O and metrics utilities
+├── tools/                    # Evaluation and visualization tools
+│   ├── evaluate_real_data.py # Performance evaluation on real CT data
+│   ├── generate_visualizations.py # Plots and comparisons
+│   ├── generate_compact_pdf.py    # PDF report generation
+│   └── export_metrics.py     # Metrics export to CSV/JSON
+├── docs/
+│   ├── FINAL_REPORT.pdf      # 10-page technical report with results
+│   ├── FINAL_REPORT_COMPACT.md # Markdown source
+│   └── README.md             # This file
+├── results_real/             # Evaluation results on Medimodel CT data
+│   ├── medimodel_results.json # Detailed metrics
+│   ├── metrics_summary.csv   # Results table
+│   ├── metrics_average.json  # Aggregate statistics
+│   ├── performance_comparison.png
+│   ├── rate_distortion_curve.png
+│   ├── slice_details.png
+│   └── qualitative_I150_Q60.png
+├── requirements.txt          # Dependencies
+└── README.md                 # Root README
 ```
 
 ## Bitstream Format
@@ -142,13 +159,22 @@ MMIP_hw2/
 
 ## Testing
 
-Run the evaluation pipeline:
+Comprehensive evaluation was performed on real medical imaging data:
+
 ```bash
-python generate_test_data.py
-python evaluate.py --input test_data/ct_512x512.dcm --qualities 30 60 90
+# Run evaluation on actual CT data
+python tools/evaluate_real_data.py
+
+# Generate performance visualizations
+python tools/generate_visualizations.py
+
+# Build final report
+python tools/generate_compact_pdf.py
 ```
 
-Check results in `results/` directory.
+**Evaluation Dataset:** Medimodel Human Skull CT (5 consecutive slices)  
+**Image Properties:** 512×512 pixels, 16-bit depth, JPEG Lossless DICOM  
+**Results Location:** `results_real/` directory and `docs/FINAL_REPORT.pdf`
 
 ## Limitations
 
@@ -171,5 +197,8 @@ Educational project for Multi-Modal Image Processing course.
 
 ## Author
 
-Multi-Modal Image Processing - Homework 2  
-January 2026
+Student: 李朋逸 (Li Peng-Yi, 314831024)  
+Course: Multi-Modal Image Processing - Homework 2  
+Date: January 2026
+
+**Repository:** https://github.com/user/medical-image-codec
