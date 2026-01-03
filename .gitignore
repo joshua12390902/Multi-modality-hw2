@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+.DS_Store
+*.swp
+*~
+submission/
+MMIP_hw2_submission.zip
+test_roundtrip.*
+test_q*.bin
+test_invalid.bin

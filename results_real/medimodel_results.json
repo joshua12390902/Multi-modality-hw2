@@ -1,0 +1,188 @@
+{
+  "dataset": "Medimodel Human_Skull_2 CT",
+  "source": "512\u00d7512, 16-bit, JPEG Lossless DICOM",
+  "slices_evaluated": [
+    "I50.dcm",
+    "I100.dcm",
+    "I150.dcm",
+    "I200.dcm",
+    "I250.dcm"
+  ],
+  "quality_levels": [
+    30,
+    60,
+    90
+  ],
+  "results": [
+    {
+      "slice": "I50.dcm",
+      "shape": [
+        512,
+        512
+      ],
+      "value_range": [
+        -3024.0,
+        2269.0
+      ],
+      "qualities": {
+        "30": {
+          "compressed_bytes": 33786,
+          "bits_per_pixel": 1.03106689453125,
+          "compression_ratio": 15.51790682531226,
+          "rmse": 304.3243103027344,
+          "psnr_db": 46.6627311706543
+        },
+        "60": {
+          "compressed_bytes": 34669,
+          "bits_per_pixel": 1.058013916015625,
+          "compression_ratio": 15.122674435374542,
+          "rmse": 198.3368377685547,
+          "psnr_db": 50.38139724731445
+        },
+        "90": {
+          "compressed_bytes": 38109,
+          "bits_per_pixel": 1.162994384765625,
+          "compression_ratio": 13.757590070587,
+          "rmse": 89.69123840332031,
+          "psnr_db": 57.27446746826172
+        }
+      }
+    },
+    {
+      "slice": "I100.dcm",
+      "shape": [
+        512,
+        512
+      ],
+      "value_range": [
+        -3024.0,
+        381.0
+      ],
+      "qualities": {
+        "30": {
+          "compressed_bytes": 33692,
+          "bits_per_pixel": 1.0281982421875,
+          "compression_ratio": 15.561201472159564,
+          "rmse": 262.07080078125,
+          "psnr_db": 47.961090087890625
+        },
+        "60": {
+          "compressed_bytes": 34129,
+          "bits_per_pixel": 1.041534423828125,
+          "compression_ratio": 15.361950247590027,
+          "rmse": 194.7278594970703,
+          "psnr_db": 50.5409049987793
+        },
+        "90": {
+          "compressed_bytes": 36178,
+          "bits_per_pixel": 1.10406494140625,
+          "compression_ratio": 14.491901155398308,
+          "rmse": 77.76347351074219,
+          "psnr_db": 58.51395034790039
+        }
+      }
+    },
+    {
+      "slice": "I150.dcm",
+      "shape": [
+        512,
+        512
+      ],
+      "value_range": [
+        -1024.0,
+        1879.0
+      ],
+      "qualities": {
+        "30": {
+          "compressed_bytes": 33393,
+          "bits_per_pixel": 1.019073486328125,
+          "compression_ratio": 15.700536040487528,
+          "rmse": 197.54010009765625,
+          "psnr_db": 50.416358947753906
+        },
+        "60": {
+          "compressed_bytes": 33754,
+          "bits_per_pixel": 1.03009033203125,
+          "compression_ratio": 15.532618356342953,
+          "rmse": 177.94833374023438,
+          "psnr_db": 51.323585510253906
+        },
+        "90": {
+          "compressed_bytes": 35668,
+          "bits_per_pixel": 1.0885009765625,
+          "compression_ratio": 14.699114051811147,
+          "rmse": 47.035865783691406,
+          "psnr_db": 62.880882263183594
+        }
+      }
+    },
+    {
+      "slice": "I200.dcm",
+      "shape": [
+        512,
+        512
+      ],
+      "value_range": [
+        -1024.0,
+        1770.0
+      ],
+      "qualities": {
+        "30": {
+          "compressed_bytes": 33441,
+          "bits_per_pixel": 1.020538330078125,
+          "compression_ratio": 15.678000059806823,
+          "rmse": 189.7645721435547,
+          "psnr_db": 50.765159606933594
+        },
+        "60": {
+          "compressed_bytes": 33736,
+          "bits_per_pixel": 1.029541015625,
+          "compression_ratio": 15.540905857244487,
+          "rmse": 180.64125061035156,
+          "psnr_db": 51.1931266784668
+        },
+        "90": {
+          "compressed_bytes": 35292,
+          "bits_per_pixel": 1.0770263671875,
+          "compression_ratio": 14.855718009747251,
+          "rmse": 37.86296844482422,
+          "psnr_db": 64.76517486572266
+        }
+      }
+    },
+    {
+      "slice": "I250.dcm",
+      "shape": [
+        512,
+        512
+      ],
+      "value_range": [
+        -1024.0,
+        1920.0
+      ],
+      "qualities": {
+        "30": {
+          "compressed_bytes": 33388,
+          "bits_per_pixel": 1.0189208984375,
+          "compression_ratio": 15.702887264885588,
+          "rmse": 209.42138671875,
+          "psnr_db": 49.90904235839844
+        },
+        "60": {
+          "compressed_bytes": 33847,
+          "bits_per_pixel": 1.032928466796875,
+          "compression_ratio": 15.489940024226668,
+          "rmse": 177.07154846191406,
+          "psnr_db": 51.366493225097656
+        },
+        "90": {
+          "compressed_bytes": 35862,
+          "bits_per_pixel": 1.09442138671875,
+          "compression_ratio": 14.61959734537951,
+          "rmse": 48.324073791503906,
+          "psnr_db": 62.64619445800781
+        }
+      }
+    }
+  ]
+}
